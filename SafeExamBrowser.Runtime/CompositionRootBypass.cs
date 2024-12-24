@@ -42,7 +42,7 @@ using SafeExamBrowser.WindowsApi.Processes;
 
 namespace SafeExamBrowser.Runtime
 {
-	internal class CompositionRoot
+	internal class CompositionRootBypass
 	{
 		private AppConfig appConfig;
 		private IConfigurationRepository configuration;
@@ -50,7 +50,7 @@ namespace SafeExamBrowser.Runtime
 		private ISystemInfo systemInfo;
 		private IText text;
 
-		internal RuntimeController RuntimeController { get; private set; }
+		internal RuntimeControllerBypass RuntimeController { get; private set; }
 
 		internal void BuildObjectGraph(Action shutdown)
 		{
@@ -74,7 +74,7 @@ namespace SafeExamBrowser.Runtime
 			var integrityModule = new IntegrityModule(appConfig, ModuleLogger(nameof(IntegrityModule)));
 			var desktopFactory = new DesktopFactory(ModuleLogger(nameof(DesktopFactory)));
 			var desktopMonitor = new DesktopMonitor(ModuleLogger(nameof(DesktopMonitor)));
-			var displayMonitor = new DisplayMonitor(ModuleLogger(nameof(DisplayMonitor)), nativeMethods, systemInfo);
+			var displayMonitor = new DisplayMonitorBypass(ModuleLogger(nameof(DisplayMonitor)), nativeMethods, systemInfo);
 			var explorerShell = new ExplorerShell(ModuleLogger(nameof(ExplorerShell)), nativeMethods);
 			var fileSystem = new FileSystem();
 			var keyGenerator = new KeyGenerator(appConfig, integrityModule, ModuleLogger(nameof(KeyGenerator)));
@@ -84,20 +84,19 @@ namespace SafeExamBrowser.Runtime
 			var remoteSessionDetector = new RemoteSessionDetector(ModuleLogger(nameof(RemoteSessionDetector)));
 			var runtimeHost = new RuntimeHost(appConfig.RuntimeAddress, new HostObjectFactory(), ModuleLogger(nameof(RuntimeHost)), FIVE_SECONDS);
 			var runtimeWindow = uiFactory.CreateRuntimeWindow(appConfig);
-			// var sentinel = new SystemSentinel(ModuleLogger(nameof(SystemSentinel)), nativeMethods, registry);
 			var sentinel = new SystemSentinelBypass(ModuleLogger(nameof(SystemSentinel)), nativeMethods, registry);
 			var server = new ServerProxy(appConfig, keyGenerator, ModuleLogger(nameof(ServerProxy)), systemInfo, userInfo);
 			var serviceProxy = new ServiceProxy(appConfig.ServiceAddress, new ProxyObjectFactory(), ModuleLogger(nameof(ServiceProxy)), Interlocutor.Runtime);
 			var sessionContext = new SessionContext();
 			var splashScreen = uiFactory.CreateSplashScreen(appConfig);
-			var vmDetector = new VirtualMachineDetector(ModuleLogger(nameof(VirtualMachineDetector)), registry, systemInfo);
+			var vmDetector = new VirtualMachineDetectorBypass(ModuleLogger(nameof(VirtualMachineDetector)), registry, systemInfo);
 
 			var bootstrapOperations = new Queue<IOperation>();
 			var sessionOperations = new Queue<SessionOperation>();
 
 			bootstrapOperations.Enqueue(new I18nOperation(logger, text));
 			bootstrapOperations.Enqueue(new CommunicationHostOperation(runtimeHost, logger));
-			bootstrapOperations.Enqueue(new ApplicationIntegrityOperation(integrityModule, logger));
+			bootstrapOperations.Enqueue(new ApplicationIntegrityOperationBypass(integrityModule, logger));
 
 			sessionOperations.Enqueue(new SessionInitializationOperation(configuration, fileSystem, logger, runtimeHost, sessionContext));
 			sessionOperations.Enqueue(new ConfigurationOperation(args, configuration, new FileSystem(), new HashAlgorithm(), logger, sessionContext));
@@ -110,14 +109,14 @@ namespace SafeExamBrowser.Runtime
 			sessionOperations.Enqueue(new DisplayMonitorOperation(displayMonitor, logger, sessionContext, text));
 			sessionOperations.Enqueue(new ServiceOperation(logger, runtimeHost, serviceProxy, sessionContext, THIRTY_SECONDS, userInfo));
 			sessionOperations.Enqueue(new ClientTerminationOperation(logger, processFactory, proxyFactory, runtimeHost, sessionContext, THIRTY_SECONDS));
-			sessionOperations.Enqueue(new KioskModeOperation(desktopFactory, desktopMonitor, explorerShell, logger, processFactory, sessionContext));
+			sessionOperations.Enqueue(new KioskModeOperationBypass(desktopFactory, desktopMonitor, explorerShell, logger, processFactory, sessionContext));
 			sessionOperations.Enqueue(new ClientOperation(logger, processFactory, proxyFactory, runtimeHost, sessionContext, THIRTY_SECONDS));
 			sessionOperations.Enqueue(new SessionActivationOperation(logger, sessionContext));
 
 			var bootstrapSequence = new OperationSequence<IOperation>(logger, bootstrapOperations);
 			var sessionSequence = new RepeatableOperationSequence<SessionOperation>(logger, sessionOperations);
 
-			RuntimeController = new RuntimeController(
+			RuntimeController = new RuntimeControllerBypass(
 				appConfig,
 				logger,
 				messageBox,
@@ -142,7 +141,8 @@ namespace SafeExamBrowser.Runtime
 			logger.Log(string.Empty);
 			logger.Log($"# Application started at {appConfig.ApplicationStartTime:yyyy-MM-dd HH:mm:ss.fff}");
 			logger.Log($"# Running on {systemInfo.OperatingSystemInfo}");
-			logger.Log($"# Computer '{systemInfo.Name}' is a {systemInfo.Model} manufactured by {systemInfo.Manufacturer}");
+			// logger.Log($"# Computer '{systemInfo.Name}' is a {systemInfo.Model} manufactured by {systemInfo.Manufacturer}");
+			logger.Log($"# Computer '{systemInfo.Name}' is a B550 MB B550M AORUS ELITE manufactured by Gigabyte Technology Co., Ltd.");
 			logger.Log($"# Runtime-ID: {appConfig.RuntimeId}");
 			logger.Log(string.Empty);
 		}
