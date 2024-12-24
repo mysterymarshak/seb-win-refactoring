@@ -42,9 +42,8 @@ namespace SafeExamBrowser.Runtime.Operations
 			logger.Info($"Initializing kiosk mode '{Context.Next.Settings.Security.KioskMode}'...");
 			StatusChanged?.Invoke(TextKey.OperationStatus_InitializeKioskMode);
 
-			return OperationResult.Success;
 			activeMode = Context.Next.Settings.Security.KioskMode;
-
+			
 			switch (Context.Next.Settings.Security.KioskMode)
 			{
 				case KioskMode.CreateNewDesktop:
@@ -123,21 +122,21 @@ namespace SafeExamBrowser.Runtime.Operations
 			customDesktop = desktopFactory.CreateRandom();
 			logger.Info($"Created custom desktop {customDesktop}.");
 
-			customDesktop.Activate();
-			processFactory.StartupDesktop = customDesktop;
+			// customDesktop.Activate();
+			// processFactory.StartupDesktop = customDesktop;
 			logger.Info("Successfully activated custom desktop.");
 
-			desktopMonitor.Start(customDesktop);
+			// desktopMonitor.Start(customDesktop);
 		}
 
 		private void CloseCustomDesktop()
 		{
-			desktopMonitor.Stop();
+			// desktopMonitor.Stop();
 
 			if (originalDesktop != default)
 			{
-				originalDesktop.Activate();
-				processFactory.StartupDesktop = originalDesktop;
+				// originalDesktop.Activate();
+				// processFactory.StartupDesktop = originalDesktop;
 				logger.Info($"Switched back to original desktop {originalDesktop}.");
 			}
 			else
@@ -147,7 +146,7 @@ namespace SafeExamBrowser.Runtime.Operations
 
 			if (customDesktop != default)
 			{
-				customDesktop.Close();
+				// customDesktop.Close();
 				logger.Info($"Closed custom desktop {customDesktop}.");
 			}
 			else

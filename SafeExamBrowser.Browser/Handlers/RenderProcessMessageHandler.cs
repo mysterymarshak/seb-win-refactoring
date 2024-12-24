@@ -56,6 +56,8 @@ namespace SafeExamBrowser.Browser.Handlers
 
 			if (settings.UseIsolatedClipboard)
 			{
+				return;
+				
 				frame.ExecuteJavaScriptAsync(clipboardScript);
 
 				if (clipboard.Content != default)

@@ -233,7 +233,6 @@ namespace SafeExamBrowser.Monitoring.Display
 
 		private string GetIdentifierForPrimaryDisplay()
 		{
-			// todo
 			var name = Screen.PrimaryScreen.DeviceName?.Replace(@"\\.\", string.Empty);
 			var resolution = $"{Screen.PrimaryScreen.Bounds.Width}x{Screen.PrimaryScreen.Bounds.Height}";
 			var identifier = $"{name} ({resolution})";

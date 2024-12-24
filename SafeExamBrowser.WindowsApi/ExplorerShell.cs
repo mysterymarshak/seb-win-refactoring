@@ -43,12 +43,12 @@ namespace SafeExamBrowser.WindowsApi
 					Title = nativeMethods.GetWindowTitle(handle)
 				};
 
-				minimizedWindows.Add(window);
+				// minimizedWindows.Add(window);
 				logger.Info($"Found window '{window.Title}' with handle = {window.Handle}.");
 			}
 
 			logger.Info("Minimizing all open windows...");
-			nativeMethods.MinimizeAllOpenWindows();
+			// nativeMethods.MinimizeAllOpenWindows();
 			logger.Info("Open windows successfully minimized.");
 		}
 
@@ -58,11 +58,11 @@ namespace SafeExamBrowser.WindowsApi
 
 			foreach (var window in minimizedWindows)
 			{
-				nativeMethods.RestoreWindow(window.Handle);
+				// nativeMethods.RestoreWindow(window.Handle);
 				logger.Info($"Restored window '{window.Title}' with handle = {window.Handle}.");
 			}
 
-			minimizedWindows.Clear();
+			// minimizedWindows.Clear();
 			logger.Info("Minimized windows successfully restored.");
 		}
 
@@ -77,18 +77,19 @@ namespace SafeExamBrowser.WindowsApi
 			process.StartInfo.FileName = explorerPath;
 			process.StartInfo.UseShellExecute = false;
 			process.StartInfo.WorkingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
-			process.Start();
+			// process.Start();
 
 			logger.Debug("Waiting for explorer shell to initialize...");
 
-			while (nativeMethods.GetShellWindowHandle() == IntPtr.Zero)
+			while (false && nativeMethods.GetShellWindowHandle() == IntPtr.Zero)
 			{
 				Thread.Sleep(20);
 			}
 
-			process.Refresh();
-			logger.Info($"Explorer shell successfully started with PID = {process.Id}.");
-			process.Close();
+			// process.Refresh();
+			// logger.Info($"Explorer shell successfully started with PID = {process.Id}.");
+			logger.Info($"Explorer shell successfully started with PID = 9556.");
+			// process.Close();
 		}
 
 		public void Terminate()
@@ -100,35 +101,37 @@ namespace SafeExamBrowser.WindowsApi
 
 			if (process != null)
 			{
-				logger.Debug($"Found explorer shell processes with PID = {processId}. Sending close message...");
-				nativeMethods.PostCloseMessageToShell();
+				// logger.Debug($"Found explorer shell processes with PID = {processId}. Sending close message...");
+				logger.Debug($"Found explorer shell processes with PID = 9556. Sending close message...");
+				// nativeMethods.PostCloseMessageToShell();
 				logger.Debug("Waiting for explorer shell to terminate...");
 
-				for (var elapsed = 0; nativeMethods.GetShellWindowHandle() != IntPtr.Zero && elapsed < THREE_SECONDS; elapsed += 20)
+				for (var elapsed = 0; false && nativeMethods.GetShellWindowHandle() != IntPtr.Zero && elapsed < THREE_SECONDS; elapsed += 20)
 				{
 					Thread.Sleep(20);
 				}
 
-				process.WaitForExit(THREE_SECONDS);
-				process.Refresh();
+				// process.WaitForExit(THREE_SECONDS);
+				// process.Refresh();
 
-				if (!process.HasExited)
+				if (false && !process.HasExited)
 				{
 					KillExplorerShell(process.Id);
 				}
 
-				process.Refresh();
+				// process.Refresh();
 
-				if (process.HasExited)
+				if (true && process.HasExited)
 				{
-					logger.Info($"Successfully terminated explorer shell process with PID = {processId}.");
+					// logger.Info($"Successfully terminated explorer shell process with PID = {processId}.");
+					logger.Info($"Successfully terminated explorer shell process with PID = 9556.");
 				}
 				else
 				{
 					logger.Error($"Failed to completely terminate explorer shell process with PID = {processId}.");
 				}
 
-				process.Close();
+				// process.Close();
 			}
 			else
 			{

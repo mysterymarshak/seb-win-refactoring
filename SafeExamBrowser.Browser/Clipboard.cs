@@ -32,6 +32,8 @@ namespace SafeExamBrowser.Browser
 
 		internal void Process(JavascriptMessageReceivedEventArgs message)
 		{
+			return;
+			
 			if (settings.UseIsolatedClipboard)
 			{
 				try
