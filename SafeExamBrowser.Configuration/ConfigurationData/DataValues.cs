@@ -241,20 +241,20 @@ namespace SafeExamBrowser.Configuration.ConfigurationData
 			settings.PowerSupply.ChargeThresholdCritical = 0.1;
 			settings.PowerSupply.ChargeThresholdLow = 0.2;
 
-			settings.Proctoring.Enabled = false;
-			settings.Proctoring.ForceRaiseHandMessage = false;
-			settings.Proctoring.ScreenProctoring.CacheSize = 500;
-			settings.Proctoring.ScreenProctoring.Enabled = false;
-			settings.Proctoring.ScreenProctoring.ImageDownscaling = 1.0;
-			settings.Proctoring.ScreenProctoring.ImageFormat = ImageFormat.Png;
-			settings.Proctoring.ScreenProctoring.ImageQuantization = ImageQuantization.Grayscale4bpp;
-			settings.Proctoring.ScreenProctoring.IntervalMaximum = 5000;
-			settings.Proctoring.ScreenProctoring.IntervalMinimum = 1000;
-			settings.Proctoring.ScreenProctoring.MetaData.CaptureApplicationData = true;
-			settings.Proctoring.ScreenProctoring.MetaData.CaptureBrowserData = true;
-			settings.Proctoring.ScreenProctoring.MetaData.CaptureWindowTitle = true;
-			settings.Proctoring.ShowRaiseHandNotification = true;
-			settings.Proctoring.ShowTaskbarNotification = true;
+			// settings.Proctoring.Enabled = false;
+			// settings.Proctoring.ForceRaiseHandMessage = false;
+			// settings.Proctoring.ScreenProctoring.CacheSize = 500;
+			// settings.Proctoring.ScreenProctoring.Enabled = false;
+			// settings.Proctoring.ScreenProctoring.ImageDownscaling = 1.0;
+			// settings.Proctoring.ScreenProctoring.ImageFormat = ImageFormat.Png;
+			// settings.Proctoring.ScreenProctoring.ImageQuantization = ImageQuantization.Grayscale4bpp;
+			// settings.Proctoring.ScreenProctoring.IntervalMaximum = 5000;
+			// settings.Proctoring.ScreenProctoring.IntervalMinimum = 1000;
+			// settings.Proctoring.ScreenProctoring.MetaData.CaptureApplicationData = true;
+			// settings.Proctoring.ScreenProctoring.MetaData.CaptureBrowserData = true;
+			// settings.Proctoring.ScreenProctoring.MetaData.CaptureWindowTitle = true;
+			// settings.Proctoring.ShowRaiseHandNotification = true;
+			// settings.Proctoring.ShowTaskbarNotification = true;
 
 			settings.Security.AllowApplicationLogAccess = false;
 			settings.Security.AllowTermination = true;

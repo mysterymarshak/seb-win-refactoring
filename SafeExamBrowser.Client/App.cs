@@ -20,7 +20,7 @@ namespace SafeExamBrowser.Client
 		private const int ILMCM_LANGUAGEBAROFF = 0x00002;
 
 		private static readonly Mutex Mutex = new Mutex(true, AppConfig.CLIENT_MUTEX_NAME);
-		private readonly CompositionRoot instances = new CompositionRoot();
+		private readonly CompositionRootBypass instances = new CompositionRootBypass();
 
 		[STAThread]
 		public static void Main()
