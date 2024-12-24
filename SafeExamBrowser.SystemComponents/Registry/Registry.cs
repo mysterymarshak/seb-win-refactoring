@@ -1,12 +1,4 @@
-﻿/*
- * Copyright (c) 2024 ETH Zürich, IT Services
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Timers;
@@ -14,6 +6,7 @@ using Microsoft.Win32;
 using SafeExamBrowser.Logging.Contracts;
 using SafeExamBrowser.SystemComponents.Contracts.Registry;
 using SafeExamBrowser.SystemComponents.Contracts.Registry.Events;
+using SafeExamBrowser.SystemComponents.Registry.SubKeys;
 
 namespace SafeExamBrowser.SystemComponents.Registry
 {
@@ -23,6 +16,9 @@ namespace SafeExamBrowser.SystemComponents.Registry
 
 		private readonly ILogger logger;
 		private readonly ConcurrentDictionary<(string key, string name), object> values;
+
+		private readonly Dictionary<string, IMockedRegistrySubKey> _mockedSubkeys =
+			new() { [RegistryValue.UserHive.Cursors_Key] = new CursorRegistryKey() };
 
 		private Timer timer;
 
@@ -41,7 +37,7 @@ namespace SafeExamBrowser.SystemComponents.Registry
 				timer = new Timer(ONE_SECOND);
 				timer.AutoReset = true;
 				timer.Elapsed += Timer_Elapsed;
-				timer.Start();
+				// timer.Start();
 			}
 
 			var success = TryRead(key, name, out var value);
@@ -54,7 +50,8 @@ namespace SafeExamBrowser.SystemComponents.Registry
 			}
 			else
 			{
-				logger.Debug($"Started monitoring value '{name}' from registry key '{key}'. Value does currently not exist or initial read failed.");
+				logger.Debug(
+					$"Started monitoring value '{name}' from registry key '{key}'. Value does currently not exist or initial read failed.");
 			}
 		}
 
@@ -64,7 +61,7 @@ namespace SafeExamBrowser.SystemComponents.Registry
 
 			if (timer != null)
 			{
-				timer.Stop();
+				// timer.Stop();
 				logger.Debug("Stopped monitoring the registry.");
 			}
 		}
@@ -76,6 +73,14 @@ namespace SafeExamBrowser.SystemComponents.Registry
 
 		public bool TryRead(string key, string name, out object value)
 		{
+			if (_mockedSubkeys.TryGetValue(key, out var mockedSubKey))
+			{
+				var mockedValue = mockedSubKey.GetValue(name);
+				value = mockedValue;
+				
+				return value is not null;
+			}
+			
 			var defaultValue = new object();
 
 			value = default;
@@ -94,6 +99,12 @@ namespace SafeExamBrowser.SystemComponents.Registry
 
 		public bool TryGetNames(string keyName, out IEnumerable<string> names)
 		{
+			if (_mockedSubkeys.TryGetValue(keyName, out var mockedSubKey))
+			{
+				names = mockedSubKey.GetValueNames();
+				return names is not null;
+			}
+			
 			names = default;
 
 			if (TryOpenKey(keyName, out var key))
@@ -171,7 +182,8 @@ namespace SafeExamBrowser.SystemComponents.Registry
 					{
 						if (!Equals(item.Value, value))
 						{
-							logger.Debug($"Value '{item.Key.name}' from registry key '{item.Key.key}' has changed from '{item.Value}' to '{value}'!");
+							logger.Debug(
+								$"Value '{item.Key.name}' from registry key '{item.Key.key}' has changed from '{item.Value}' to '{value}'!");
 							ValueChanged?.Invoke(item.Key.key, item.Key.name, item.Value, value);
 						}
 					}

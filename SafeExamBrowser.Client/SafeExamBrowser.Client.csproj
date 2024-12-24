@@ -79,8 +79,6 @@
     <Compile Include="App.cs" />
     <Compile Include="ClientContext.cs" />
     <Compile Include="ClientController.cs" />
-    <Compile Include="ClientControllerBypass.cs" />
-    <Compile Include="CompositionRootBypass.cs" />
     <Compile Include="Contracts\ICoordinator.cs" />
     <Compile Include="Coordinator.cs" />
     <Compile Include="Operations\ClientHostDisconnectionOperation.cs" />
@@ -119,7 +117,6 @@
     <Compile Include="Responsibilities\CommunicationResponsibility.cs" />
     <Compile Include="Responsibilities\ClientResponsibility.cs" />
     <Compile Include="Responsibilities\IntegrityResponsibility.cs" />
-    <Compile Include="Responsibilities\IntegrityResponsibilityBypass.cs" />
     <Compile Include="Responsibilities\MonitoringResponsibility.cs" />
     <Compile Include="Responsibilities\NetworkResponsibility.cs" />
     <Compile Include="Responsibilities\ProctoringResponsibility.cs" />

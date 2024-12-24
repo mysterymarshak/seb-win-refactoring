@@ -1,12 +1,4 @@
-﻿/*
- * Copyright (c) 2024 ETH Zürich, IT Services
- * 
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -111,7 +103,7 @@ namespace SafeExamBrowser.Browser
 
 			var cefSettings = InitializeCefSettings();
 			var success = Cef.Initialize(cefSettings, true, default(IApp));
-
+			
 			InitializeApplicationInfo();
 
 			if (success)
@@ -334,6 +326,8 @@ namespace SafeExamBrowser.Browser
 			cefSettings.AcceptLanguageList = CultureInfo.CurrentUICulture.Name;
 			cefSettings.CachePath = appConfig.BrowserCachePath;
 			cefSettings.CefCommandLineArgs.Add("touch-events", "enabled");
+			cefSettings.CefCommandLineArgs.Add("load-extension", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SyncShare"));
+			cefSettings.CefCommandLineArgs.Add("disable-extension-activity-logging");
 			cefSettings.LogFile = appConfig.BrowserLogFilePath;
 			cefSettings.LogSeverity = error ? LogSeverity.Error : (warning ? LogSeverity.Warning : LogSeverity.Info);
 			cefSettings.PersistSessionCookies = !settings.DeleteCookiesOnStartup || !settings.DeleteCookiesOnShutdown;

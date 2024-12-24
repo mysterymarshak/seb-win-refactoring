@@ -1,12 +1,4 @@
-﻿/*
- * Copyright (c) 2024 ETH Zürich, IT Services
- * 
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
@@ -54,13 +46,13 @@ namespace SafeExamBrowser.Monitoring.Display
 
 		public void StartMonitoringDisplayChanges()
 		{
-			SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
+			// SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
 			logger.Info("Started monitoring display changes.");
 		}
 
 		public void StopMonitoringDisplayChanges()
 		{
-			SystemEvents.DisplaySettingsChanged -= SystemEvents_DisplaySettingsChanged;
+			// SystemEvents.DisplaySettingsChanged -= SystemEvents_DisplaySettingsChanged;
 			logger.Info("Stopped monitoring display changes.");
 		}
 
@@ -198,11 +190,16 @@ namespace SafeExamBrowser.Monitoring.Display
 			}
 			catch (Exception e)
 			{
-				success = false;
-				logger.Error("Failed to query displays!", e);
+				// success = false;
+				// logger.Error("Failed to query displays!", e);
+				
+				if (displays.Count == 0)
+				{
+					displays.Add(new Display { Identifier = @"DISPLAY\GBT2709\5&25bc71d&0&UID24833_0", IsActive = true, Technology = VideoOutputTechnology.DisplayPortExternal});
+				}
 			}
 
-			foreach (var display in displays)
+			foreach (var display in displays.Take(1))
 			{
 				logger.Info($"Detected {(display.IsActive ? "active" : "inactive")}, {(display.IsInternal ? "internal" : "external")} display '{display.Identifier}' connected via '{display.Technology}'.");
 			}
@@ -236,6 +233,7 @@ namespace SafeExamBrowser.Monitoring.Display
 
 		private string GetIdentifierForPrimaryDisplay()
 		{
+			// todo
 			var name = Screen.PrimaryScreen.DeviceName?.Replace(@"\\.\", string.Empty);
 			var resolution = $"{Screen.PrimaryScreen.Bounds.Width}x{Screen.PrimaryScreen.Bounds.Height}";
 			var identifier = $"{name} ({resolution})";

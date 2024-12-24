@@ -1,12 +1,4 @@
-﻿/*
- * Copyright (c) 2024 ETH Zürich, IT Services
- * 
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-using System;
+﻿using System;
 using System.Linq;
 using NAudio.CoreAudioApi;
 using SafeExamBrowser.Settings.SystemComponents;
@@ -56,7 +48,7 @@ namespace SafeExamBrowser.SystemComponents.Audio
 		{
 			if (audioDevice != default(MMDevice))
 			{
-				audioDevice.AudioEndpointVolume.Mute = true;
+				// audioDevice.AudioEndpointVolume.Mute = true;
 			}
 		}
 
@@ -64,7 +56,7 @@ namespace SafeExamBrowser.SystemComponents.Audio
 		{
 			if (audioDevice != default(MMDevice))
 			{
-				audioDevice.AudioEndpointVolume.Mute = false;
+				// audioDevice.AudioEndpointVolume.Mute = false;
 			}
 		}
 
@@ -72,7 +64,7 @@ namespace SafeExamBrowser.SystemComponents.Audio
 		{
 			if (audioDevice != default(MMDevice))
 			{
-				audioDevice.AudioEndpointVolume.MasterVolumeLevelScalar = (float) value;
+				// audioDevice.AudioEndpointVolume.MasterVolumeLevelScalar = (float) value;
 			}
 		}
 
@@ -105,7 +97,7 @@ namespace SafeExamBrowser.SystemComponents.Audio
 		private void InitializeAudioDevice()
 		{
 			logger.Info($"Found '{audioDevice}' to be the active audio device.");
-			audioDevice.AudioEndpointVolume.OnVolumeNotification += AudioEndpointVolume_OnVolumeNotification;
+			// audioDevice.AudioEndpointVolume.OnVolumeNotification += AudioEndpointVolume_OnVolumeNotification;
 			audioDeviceFullName = audioDevice.FriendlyName;
 			audioDeviceShortName = audioDevice.FriendlyName.Length > 25 ? audioDevice.FriendlyName.Split(' ').First() : audioDevice.FriendlyName;
 			logger.Info("Started monitoring the audio device.");
@@ -113,7 +105,7 @@ namespace SafeExamBrowser.SystemComponents.Audio
 
 		private void FinalizeAudioDevice()
 		{
-			audioDevice.AudioEndpointVolume.OnVolumeNotification -= AudioEndpointVolume_OnVolumeNotification;
+			// audioDevice.AudioEndpointVolume.OnVolumeNotification -= AudioEndpointVolume_OnVolumeNotification;
 			audioDevice.Dispose();
 			logger.Info("Stopped monitoring the audio device.");
 		}
@@ -124,13 +116,13 @@ namespace SafeExamBrowser.SystemComponents.Audio
 			{
 				originalVolume = audioDevice.AudioEndpointVolume.MasterVolumeLevelScalar;
 				logger.Info($"Saved original volume of {Math.Round(originalVolume * 100)}%.");
-				audioDevice.AudioEndpointVolume.MasterVolumeLevelScalar = settings.InitialVolume / 100f;
+				// audioDevice.AudioEndpointVolume.MasterVolumeLevelScalar = settings.InitialVolume / 100f;
 				logger.Info($"Set initial volume to {settings.InitialVolume}%.");
 			}
 
 			if (settings.MuteAudio)
 			{
-				audioDevice.AudioEndpointVolume.Mute = true;
+				// audioDevice.AudioEndpointVolume.Mute = true;
 				logger.Info("Muted audio device.");
 			}
 		}
@@ -139,13 +131,13 @@ namespace SafeExamBrowser.SystemComponents.Audio
 		{
 			if (settings.InitializeVolume)
 			{
-				audioDevice.AudioEndpointVolume.MasterVolumeLevelScalar = originalVolume;
+				// audioDevice.AudioEndpointVolume.MasterVolumeLevelScalar = originalVolume;
 				logger.Info($"Reverted volume to original value of {Math.Round(originalVolume * 100)}%.");
 			}
 
 			if (settings.MuteAudio)
 			{
-				audioDevice.AudioEndpointVolume.Mute = false;
+				// audioDevice.AudioEndpointVolume.Mute = false;
 				logger.Info("Unmuted audio device.");
 			}
 		}

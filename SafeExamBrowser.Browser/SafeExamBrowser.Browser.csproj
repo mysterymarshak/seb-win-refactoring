@@ -84,7 +84,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BrowserApplication.cs" />
-    <Compile Include="BrowserApplicationBypass.cs" />
     <Compile Include="BrowserWindow.cs" />
     <Compile Include="Clipboard.cs" />
     <Compile Include="Events\ClipboardChangedEventHandler.cs" />

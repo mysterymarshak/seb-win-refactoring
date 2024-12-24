@@ -1,12 +1,4 @@
-﻿/*
- * Copyright (c) 2024 ETH Zürich, IT Services
- * 
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -205,10 +197,10 @@ namespace SafeExamBrowser.Runtime
 
 			runtimeWindow.ShowProgressBar = false;
 			runtimeWindow.ShowLog = Session.Settings.Security.AllowApplicationLogAccess;
-			runtimeWindow.TopMost = Session.Settings.Security.KioskMode != KioskMode.None;
+			// runtimeWindow.TopMost = Session.Settings.Security.KioskMode != KioskMode.None;
 			runtimeWindow.UpdateStatus(TextKey.RuntimeWindow_ApplicationRunning);
 
-			if (Session.Settings.Security.KioskMode == KioskMode.DisableExplorerShell)
+			if (true || Session.Settings.Security.KioskMode == KioskMode.DisableExplorerShell)
 			{
 				runtimeWindow.Hide();
 			}
@@ -239,9 +231,9 @@ namespace SafeExamBrowser.Runtime
 
 				runtimeWindow.ShowProgressBar = false;
 				runtimeWindow.UpdateStatus(TextKey.RuntimeWindow_ApplicationRunning);
-				runtimeWindow.TopMost = Session.Settings.Security.KioskMode != KioskMode.None;
+				// runtimeWindow.TopMost = Session.Settings.Security.KioskMode != KioskMode.None;
 
-				if (Session.Settings.Security.KioskMode == KioskMode.DisableExplorerShell)
+				if (true || Session.Settings.Security.KioskMode == KioskMode.DisableExplorerShell)
 				{
 					runtimeWindow.Hide();
 				}
@@ -411,7 +403,7 @@ namespace SafeExamBrowser.Runtime
 			var isStartup = !SessionIsRunning;
 			var isRunningOnDefaultDesktop = SessionIsRunning && Session.Settings.Security.KioskMode == KioskMode.DisableExplorerShell;
 
-			if (isStartup || isRunningOnDefaultDesktop)
+			if (true || isStartup || isRunningOnDefaultDesktop)
 			{
 				TryAskForExamSelectionViaDialog(args);
 			}
@@ -426,7 +418,7 @@ namespace SafeExamBrowser.Runtime
 			var isStartup = !SessionIsRunning;
 			var isRunningOnDefaultDesktop = SessionIsRunning && Session.Settings.Security.KioskMode == KioskMode.DisableExplorerShell;
 
-			if (isStartup || isRunningOnDefaultDesktop)
+			if (true || isStartup || isRunningOnDefaultDesktop)
 			{
 				TryAskForServerFailureActionViaDialog(args);
 			}
@@ -450,7 +442,7 @@ namespace SafeExamBrowser.Runtime
 			var isStartup = !SessionIsRunning;
 			var isRunningOnDefaultDesktop = SessionIsRunning && Session.Settings.Security.KioskMode == KioskMode.DisableExplorerShell;
 
-			if (isStartup || isRunningOnDefaultDesktop)
+			if (true || isStartup || isRunningOnDefaultDesktop)
 			{
 				TryGetPasswordViaDialog(args);
 			}
@@ -477,7 +469,7 @@ namespace SafeExamBrowser.Runtime
 				title = title.Replace(placeholder.Key, placeholder.Value);
 			}
 
-			if (isStartup || isRunningOnDefaultDesktop)
+			if (true || isStartup || isRunningOnDefaultDesktop)
 			{
 				args.Result = messageBox.Show(message, title, args.Action, args.Icon, runtimeWindow);
 			}

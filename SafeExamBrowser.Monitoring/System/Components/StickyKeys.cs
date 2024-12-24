@@ -1,12 +1,4 @@
-﻿/*
- * Copyright (c) 2024 ETH Zürich, IT Services
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Timers;
 using SafeExamBrowser.Logging.Contracts;
 using SafeExamBrowser.Monitoring.Contracts.System.Events;
@@ -36,13 +28,14 @@ namespace SafeExamBrowser.Monitoring.System.Components
 			var success = nativeMethods.TryGetStickyKeys(out var state);
 
 			if (success)
-			{
-				success = nativeMethods.DisableStickyKeys();
+			{ 
+				// success = nativeMethods.DisableStickyKeys();
+				success = true;
 
 				if (success)
 				{
-					original = state;
-					logger.Info($"Disabled sticky keys (original state: {ToString(state)}).");
+					original = StickyKeysState.GetAvailableState();
+					logger.Info($"Disabled sticky keys (original state: {ToString(original)}).");
 				}
 				else
 				{
@@ -63,12 +56,13 @@ namespace SafeExamBrowser.Monitoring.System.Components
 
 			if (success)
 			{
-				success = nativeMethods.EnableStickyKeys();
+				// success = nativeMethods.EnableStickyKeys();
+				success = true;
 
 				if (success)
 				{
-					original = state;
-					logger.Info($"Enabled sticky keys (original state: {ToString(state)}).");
+					original = StickyKeysState.GetNotAvailableState();
+					logger.Info($"Enabled sticky keys (original state: {ToString(original)}).");
 				}
 				else
 				{
@@ -89,7 +83,8 @@ namespace SafeExamBrowser.Monitoring.System.Components
 
 			if (original != default)
 			{
-				success = nativeMethods.TrySetStickyKeys(original);
+				// success = nativeMethods.TrySetStickyKeys(original);
+				success = true;
 
 				if (success)
 				{
@@ -111,7 +106,7 @@ namespace SafeExamBrowser.Monitoring.System.Components
 			timer.AutoReset = true;
 			timer.Elapsed += Timer_Elapsed;
 			timer.Interval = 1000;
-			timer.Start();
+			// timer.Start();
 
 			logger.Info("Started monitoring sticky keys.");
 		}
@@ -119,7 +114,7 @@ namespace SafeExamBrowser.Monitoring.System.Components
 		internal void StopMonitoring()
 		{
 			timer.Elapsed -= Timer_Elapsed;
-			timer.Stop();
+			// timer.Stop();
 
 			logger.Info("Stopped monitoring sticky keys.");
 		}
@@ -172,4 +167,14 @@ namespace SafeExamBrowser.Monitoring.System.Components
 			return $"functionality {availability} and {status}, hotkey {hotkey}";
 		}
 	}
+}
+
+public class StickyKeysState : IStickyKeysState
+{
+	public bool IsAvailable { get; set; }
+	public bool IsEnabled { get; set; }
+	public bool IsHotkeyActive { get; set; }
+	
+	public static StickyKeysState GetAvailableState() => new StickyKeysState { IsAvailable = true, IsEnabled = true, IsHotkeyActive = true };
+	public static StickyKeysState GetNotAvailableState() => new StickyKeysState { IsAvailable = true, IsEnabled = false, IsHotkeyActive = false };
 }

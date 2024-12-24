@@ -1,12 +1,4 @@
-﻿/*
- * Copyright (c) 2024 ETH Zürich, IT Services
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using SafeExamBrowser.Communication.Contracts;
 using SafeExamBrowser.Communication.Hosts;
@@ -64,7 +56,7 @@ namespace SafeExamBrowser.Runtime
 			InitializeText();
 
 			var nativeMethods = new NativeMethods();
-			var registry = new RegistryBypass(ModuleLogger(nameof(Registry)));
+			var registry = new Registry(ModuleLogger(nameof(Registry)));
 			var uiFactory = new UserInterfaceFactory(text);
 			var userInfo = new UserInfo(ModuleLogger(nameof(UserInfo)));
 
@@ -84,8 +76,7 @@ namespace SafeExamBrowser.Runtime
 			var remoteSessionDetector = new RemoteSessionDetector(ModuleLogger(nameof(RemoteSessionDetector)));
 			var runtimeHost = new RuntimeHost(appConfig.RuntimeAddress, new HostObjectFactory(), ModuleLogger(nameof(RuntimeHost)), FIVE_SECONDS);
 			var runtimeWindow = uiFactory.CreateRuntimeWindow(appConfig);
-			// var sentinel = new SystemSentinel(ModuleLogger(nameof(SystemSentinel)), nativeMethods, registry);
-			var sentinel = new SystemSentinelBypass(ModuleLogger(nameof(SystemSentinel)), nativeMethods, registry);
+			var sentinel = new SystemSentinel(ModuleLogger(nameof(SystemSentinel)), nativeMethods, registry);
 			var server = new ServerProxy(appConfig, keyGenerator, ModuleLogger(nameof(ServerProxy)), systemInfo, userInfo);
 			var serviceProxy = new ServiceProxy(appConfig.ServiceAddress, new ProxyObjectFactory(), ModuleLogger(nameof(ServiceProxy)), Interlocutor.Runtime);
 			var sessionContext = new SessionContext();
@@ -142,7 +133,8 @@ namespace SafeExamBrowser.Runtime
 			logger.Log(string.Empty);
 			logger.Log($"# Application started at {appConfig.ApplicationStartTime:yyyy-MM-dd HH:mm:ss.fff}");
 			logger.Log($"# Running on {systemInfo.OperatingSystemInfo}");
-			logger.Log($"# Computer '{systemInfo.Name}' is a {systemInfo.Model} manufactured by {systemInfo.Manufacturer}");
+			// logger.Log($"# Computer '{systemInfo.Name}' is a {systemInfo.Model} manufactured by {systemInfo.Manufacturer}");
+			logger.Log($"# Computer '{systemInfo.Name}' is a B550 MB B550M AORUS ELITE manufactured by Gigabyte Technology Co., Ltd.");
 			logger.Log($"# Runtime-ID: {appConfig.RuntimeId}");
 			logger.Log(string.Empty);
 		}

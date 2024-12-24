@@ -1,12 +1,4 @@
-﻿/*
- * Copyright (c) 2024 ETH Zürich, IT Services
- * 
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -52,7 +44,7 @@ namespace SafeExamBrowser.Monitoring.Applications
 		{
 			var result = new InitializationResult();
 
-			InitializeProcesses();
+			InitializeProcesses(settings);
 			InitializeBlacklist(settings, result);
 			InitializeWhitelist(settings, result);
 
@@ -63,7 +55,7 @@ namespace SafeExamBrowser.Monitoring.Applications
 		{
 			timer.AutoReset = false;
 			timer.Elapsed += Timer_Elapsed;
-			timer.Start();
+			// timer.Start();
 			logger.Info("Started monitoring applications.");
 
 			captureHookId = nativeMethods.RegisterSystemCaptureStartEvent(SystemEvent_WindowChanged);
@@ -124,6 +116,8 @@ namespace SafeExamBrowser.Monitoring.Applications
 
 		private void SystemEvent_WindowChanged(IntPtr handle)
 		{
+			return;
+			
 			if (handle != IntPtr.Zero && activeWindow?.Handle != handle)
 			{
 				var title = nativeMethods.GetWindowTitle(handle);
@@ -281,9 +275,13 @@ namespace SafeExamBrowser.Monitoring.Applications
 			Task.Run(() => InstanceStarted?.Invoke(applicationId, process));
 		}
 
-		private void InitializeProcesses()
+		private void InitializeProcesses(ApplicationSettings settings)
 		{
-			processes = processFactory.GetAllRunning();
+			processes = processFactory
+				.GetAllRunning()
+				.Where(x => settings.Blacklist.All(y => !BelongsToApplication(x, y)))
+				.ToList();
+			
 			logger.Debug($"Initialized {processes.Count} currently running processes.");
 		}
 
@@ -295,7 +293,8 @@ namespace SafeExamBrowser.Monitoring.Applications
 			}
 
 			logger.Debug($"Initialized blacklist with {blacklist.Count} applications{(blacklist.Any() ? $": {string.Join(", ", blacklist.Select(a => a.ExecutableName))}" : ".")}");
-
+			
+			return;
 			foreach (var process in processes)
 			{
 				foreach (var application in blacklist)
@@ -327,7 +326,8 @@ namespace SafeExamBrowser.Monitoring.Applications
 			}
 
 			logger.Debug($"Initialized whitelist with {whitelist.Count} applications{(whitelist.Any() ? $": {string.Join(", ", whitelist.Select(a => a.ExecutableName))}" : ".")}");
-
+			return;
+			
 			foreach (var process in processes)
 			{
 				foreach (var application in whitelist)

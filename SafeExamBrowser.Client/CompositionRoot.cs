@@ -1,12 +1,4 @@
-﻿/*
- * Copyright (c) 2024 ETH Zürich, IT Services
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -81,7 +73,7 @@ namespace SafeExamBrowser.Client
 		private UserInterfaceMode uiMode;
 
 		private IActionCenter actionCenter;
-		private ApplicationMonitorBypass applicationMonitor;
+		private ApplicationMonitor applicationMonitor;
 		private ILogger logger;
 		private IMessageBox messageBox;
 		private INativeMethods nativeMethods;
@@ -95,7 +87,7 @@ namespace SafeExamBrowser.Client
 		private IText text;
 		private IUserInterfaceFactory uiFactory;
 
-		internal ClientControllerBypass ClientController { get; private set; }
+		internal ClientController ClientController { get; private set; }
 
 		internal void BuildObjectGraph(Action shutdown)
 		{
@@ -111,7 +103,7 @@ namespace SafeExamBrowser.Client
 			context = new ClientContext();
 			messageBox = BuildMessageBox();
 			nativeMethods = new NativeMethods();
-			applicationMonitor = new ApplicationMonitorBypass(TWO_SECONDS, ModuleLogger(nameof(ApplicationMonitor)), nativeMethods, processFactory);
+			applicationMonitor = new ApplicationMonitor(TWO_SECONDS, ModuleLogger(nameof(ApplicationMonitor)), nativeMethods, processFactory);
 			networkAdapter = new NetworkAdapter(ModuleLogger(nameof(NetworkAdapter)), nativeMethods);
 			splashScreen = uiFactory.CreateSplashScreen();
 			systemInfo = new SystemInfo(new Registry(ModuleLogger(nameof(Registry))));
@@ -120,15 +112,15 @@ namespace SafeExamBrowser.Client
 			userInfo = new UserInfo(ModuleLogger(nameof(UserInfo)));
 
 			var applicationFactory = new ApplicationFactory(applicationMonitor, ModuleLogger(nameof(ApplicationFactory)), nativeMethods, processFactory, new Registry(ModuleLogger(nameof(Registry))));
-			var clipboard = new ClipboardBypass(ModuleLogger(nameof(Clipboard)), nativeMethods);
+			var clipboard = new Clipboard(ModuleLogger(nameof(Clipboard)), nativeMethods);
 			var coordinator = new Coordinator();
 			// var displayMonitor = new DisplayMonitor(ModuleLogger(nameof(DisplayMonitor)), nativeMethods, systemInfo);
-			var displayMonitor = new DisplayMonitorBypass(ModuleLogger(nameof(DisplayMonitor)), nativeMethods, systemInfo);
+			var displayMonitor = new DisplayMonitor(ModuleLogger(nameof(DisplayMonitor)), nativeMethods, systemInfo);
 			var explorerShell = new ExplorerShell(ModuleLogger(nameof(ExplorerShell)), nativeMethods);
 			var fileSystemDialog = BuildFileSystemDialog();
 			var runtimeProxy = new RuntimeProxy(runtimeHostUri, new ProxyObjectFactory(), ModuleLogger(nameof(RuntimeProxy)), Interlocutor.Client);
 			// var sentinel = new SystemSentinel(ModuleLogger(nameof(SystemSentinel)), nativeMethods, new Registry(ModuleLogger(nameof(Registry))));
-			var sentinel = new SystemSentinelBypass(ModuleLogger(nameof(SystemSentinel)), nativeMethods, new RegistryBypass(ModuleLogger(nameof(Registry))));
+			var sentinel = new SystemSentinel(ModuleLogger(nameof(SystemSentinel)), nativeMethods, new Registry(ModuleLogger(nameof(Registry))));
 
 			var operations = BuildOperations(applicationFactory, clipboard, displayMonitor, fileSystemDialog, runtimeProxy);
 			var responsibilities = BuildResponsibilities(coordinator, displayMonitor, explorerShell, runtimeProxy, sentinel, shutdown);
@@ -139,7 +131,7 @@ namespace SafeExamBrowser.Client
 			context.Runtime = runtimeProxy;
 			context.UserInterfaceFactory = uiFactory;
 
-			ClientController = new ClientControllerBypass(context, logger, operations, responsibilities, runtimeProxy, splashScreen);
+			ClientController = new ClientController(context, logger, operations, responsibilities, runtimeProxy, splashScreen);
 		}
 
 		internal void LogStartupInformation()
@@ -303,7 +295,7 @@ namespace SafeExamBrowser.Client
 
 		private IOperation BuildKeyboardInterceptorOperation()
 		{
-			var keyboardInterceptor = new KeyboardInterceptorBypass(ModuleLogger(nameof(KeyboardInterceptor)), nativeMethods, context.Settings.Keyboard);
+			var keyboardInterceptor = new KeyboardInterceptor(ModuleLogger(nameof(KeyboardInterceptor)), nativeMethods, context.Settings.Keyboard);
 			var operation = new KeyboardInterceptorOperation(context, keyboardInterceptor, logger);
 
 			return operation;
@@ -350,7 +342,7 @@ namespace SafeExamBrowser.Client
 		private IOperation BuildShellOperation()
 		{
 			var aboutNotification = new AboutNotification(context.AppConfig, text, uiFactory);
-			var audio = new AudioBypass(context.Settings.Audio, ModuleLogger(nameof(Audio)));
+			var audio = new Audio(context.Settings.Audio, ModuleLogger(nameof(Audio)));
 			var keyboard = new Keyboard(ModuleLogger(nameof(Keyboard)));
 			var logNotification = new LogNotification(logger, text, uiFactory);
 			var operation = new ShellOperation(

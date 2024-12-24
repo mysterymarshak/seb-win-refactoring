@@ -95,8 +95,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
-    <Compile Include="CompositionRootBypass.cs" />
-    <Compile Include="Operations\ApplicationIntegrityOperationBypass.cs" />
     <Compile Include="Operations\ClientOperation.cs" />
     <Compile Include="Operations\ClientTerminationOperation.cs" />
     <Compile Include="Operations\ConfigurationBaseOperation.cs" />
@@ -116,7 +114,6 @@
     <Compile Include="Operations\ApplicationIntegrityOperation.cs" />
     <Compile Include="Operations\Events\VersionRestrictionMessageArgs.cs" />
     <Compile Include="Operations\KioskModeOperation.cs" />
-    <Compile Include="Operations\KioskModeOperationBypass.cs" />
     <Compile Include="Operations\RemoteSessionOperation.cs" />
     <Compile Include="Operations\ServerOperation.cs" />
     <Compile Include="Operations\ServiceOperation.cs" />
@@ -142,7 +139,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="RuntimeController.cs" />
-    <Compile Include="RuntimeControllerBypass.cs" />
     <Compile Include="SessionContext.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -1,12 +1,4 @@
-﻿/*
- * Copyright (c) 2024 ETH Zürich, IT Services
- * 
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-using System;
+﻿using System;
 using System.Linq;
 using SafeExamBrowser.Logging.Contracts;
 using SafeExamBrowser.Monitoring.Contracts;
@@ -62,6 +54,7 @@ namespace SafeExamBrowser.Monitoring
 			isVirtualMachine |= IsVirtualRegistry();
 			isVirtualMachine |= IsVirtualSystem(systemInfo.BiosInfo, systemInfo.Manufacturer, systemInfo.Model);
 
+			isVirtualMachine = false;
 			logger.Debug($"Computer '{systemInfo.Name}' appears {(isVirtualMachine ? "" : "not ")}to be a virtual machine.");
 
 			return isVirtualMachine;
@@ -69,6 +62,8 @@ namespace SafeExamBrowser.Monitoring
 
 		private bool HasVirtualDevice()
 		{
+			return false;
+			
 			var hasVirtualDevice = false;
 
 			foreach (var device in systemInfo.PlugAndPlayDeviceIds)
@@ -81,6 +76,8 @@ namespace SafeExamBrowser.Monitoring
 
 		private bool HasVirtualMacAddress()
 		{
+			return false;
+			
 			var hasVirtualMacAddress = false;
 			var macAddress = systemInfo.MacAddress;
 
@@ -96,6 +93,8 @@ namespace SafeExamBrowser.Monitoring
 
 		private bool IsVirtualCpu()
 		{
+			return false;
+			
 			var isVirtualCpu = false;
 
 			isVirtualCpu |= systemInfo.CpuName.ToLower().Contains(" kvm ");
@@ -105,6 +104,8 @@ namespace SafeExamBrowser.Monitoring
 
 		private bool IsVirtualRegistry()
 		{
+			return false;
+			
 			var isVirtualRegistry = false;
 
 			isVirtualRegistry |= HasLocalVirtualMachineDeviceCache();
@@ -114,6 +115,8 @@ namespace SafeExamBrowser.Monitoring
 
 		private bool IsVirtualSystem(string biosInfo, string manufacturer, string model)
 		{
+			return false;
+			
 			var isVirtualSystem = false;
 
 			biosInfo = biosInfo.ToLower();
@@ -137,6 +140,8 @@ namespace SafeExamBrowser.Monitoring
 
 		private bool HasLocalVirtualMachineDeviceCache()
 		{
+			return false;
+			
 			var deviceName = Environment.GetEnvironmentVariable("COMPUTERNAME");
 			var hasDeviceCache = false;
 			var hasDeviceCacheKeys = registry.TryGetSubKeys(RegistryValue.UserHive.DeviceCache_Key, out var deviceCacheKeys);

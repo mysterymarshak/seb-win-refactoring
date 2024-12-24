@@ -1,12 +1,4 @@
-﻿/*
- * Copyright (c) 2024 ETH Zürich, IT Services
- * 
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-using SafeExamBrowser.Client.Responsibilities;
+﻿using SafeExamBrowser.Client.Responsibilities;
 using SafeExamBrowser.Communication.Contracts.Proxies;
 using SafeExamBrowser.Core.Contracts.OperationModel;
 using SafeExamBrowser.Core.Contracts.ResponsibilityModel;
@@ -85,7 +77,7 @@ namespace SafeExamBrowser.Client
 			DelegateShutdownResponsibilities();
 
 			var success = operations.TryRevert() == OperationResult.Success;
-
+			
 			if (success)
 			{
 				logger.Info("Application successfully finalized.");
@@ -104,7 +96,7 @@ namespace SafeExamBrowser.Client
 		{
 			splashScreen.AppConfig = context.AppConfig;
 		}
-
+		
 		private void DelegateStartupResponsibilities()
 		{
 			responsibilities.Delegate(ClientTask.RegisterEvents);

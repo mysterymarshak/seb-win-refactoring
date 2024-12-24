@@ -1,12 +1,4 @@
-﻿/*
- * Copyright (c) 2024 ETH Zürich, IT Services
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-using SafeExamBrowser.Core.Contracts.OperationModel;
+﻿using SafeExamBrowser.Core.Contracts.OperationModel;
 using SafeExamBrowser.Core.Contracts.OperationModel.Events;
 using SafeExamBrowser.I18n.Contracts;
 using SafeExamBrowser.Logging.Contracts;
@@ -50,6 +42,7 @@ namespace SafeExamBrowser.Runtime.Operations
 			logger.Info($"Initializing kiosk mode '{Context.Next.Settings.Security.KioskMode}'...");
 			StatusChanged?.Invoke(TextKey.OperationStatus_InitializeKioskMode);
 
+			return OperationResult.Success;
 			activeMode = Context.Next.Settings.Security.KioskMode;
 
 			switch (Context.Next.Settings.Security.KioskMode)

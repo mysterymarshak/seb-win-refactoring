@@ -1,12 +1,4 @@
-﻿/*
- * Copyright (c) 2024 ETH Zürich, IT Services
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using SafeExamBrowser.Logging.Contracts;
@@ -33,6 +25,8 @@ namespace SafeExamBrowser.Monitoring.System.Components
 
 		internal void StartMonitoring()
 		{
+			logger.Info("Started monitoring cursors.");
+			
 			registry.ValueChanged += Registry_ValueChanged;
 
 			if (registry.TryGetNames(RegistryValue.UserHive.Cursors_Key, out var names))
@@ -52,6 +46,8 @@ namespace SafeExamBrowser.Monitoring.System.Components
 
 		internal void StopMonitoring()
 		{
+			logger.Info("Stopped monitoring cursors.");
+			
 			registry.ValueChanged -= Registry_ValueChanged;
 
 			if (registry.TryGetNames(RegistryValue.UserHive.Cursors_Key, out var names))
@@ -71,8 +67,6 @@ namespace SafeExamBrowser.Monitoring.System.Components
 
 		internal bool Verify()
 		{
-			logger.Info($"Starting cursor verification...");
-
 			var success = registry.TryGetNames(RegistryValue.UserHive.Cursors_Key, out var cursors);
 
 			if (success)
@@ -125,7 +119,6 @@ namespace SafeExamBrowser.Monitoring.System.Components
 		private bool VerifyCursor(string cursor)
 		{
 			var success = true;
-
 			success &= registry.TryRead(RegistryValue.UserHive.Cursors_Key, cursor, out var value);
 			success &= !(value is string) || (value is string path && (string.IsNullOrWhiteSpace(path) || IsValidCursorPath(path)));
 

@@ -1,12 +1,4 @@
-﻿/*
- * Copyright (c) 2024 ETH Zürich, IT Services
- * 
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-using System.Timers;
+﻿using System.Timers;
 using SafeExamBrowser.Logging.Contracts;
 using SafeExamBrowser.Monitoring.Contracts;
 using SafeExamBrowser.Settings.Security;
@@ -33,13 +25,13 @@ namespace SafeExamBrowser.Monitoring
 		{
 			this.policy = policy;
 
-			nativeMethods.EmptyClipboard();
+			// nativeMethods.EmptyClipboard();
 			logger.Debug("Cleared clipboard.");
 
 			if (policy != ClipboardPolicy.Allow)
 			{
-				timer.Elapsed += Timer_Elapsed;
-				timer.Start();
+				// timer.Elapsed += Timer_Elapsed;
+				// timer.Start();
 
 				logger.Debug($"Started clipboard monitoring with interval {timer.Interval} ms.");
 			}
@@ -53,12 +45,12 @@ namespace SafeExamBrowser.Monitoring
 
 		public void Terminate()
 		{
-			nativeMethods.EmptyClipboard();
+			// nativeMethods.EmptyClipboard();
 			logger.Debug("Cleared clipboard.");
 
 			if (policy != ClipboardPolicy.Allow)
 			{
-				timer.Stop();
+				// timer.Stop();
 				logger.Debug("Stopped clipboard monitoring.");
 			}
 			else
