@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using SafeExamBrowser.Communication.Contracts;
 using SafeExamBrowser.Communication.Hosts;
 using SafeExamBrowser.Communication.Proxies;
@@ -126,7 +128,8 @@ namespace SafeExamBrowser.Runtime
 
 		internal void LogStartupInformation()
 		{
-			logger.Log($"/* {appConfig.ProgramTitle}, Version {appConfig.ProgramInformationalVersion}, Build {appConfig.ProgramBuildVersion}");
+			//logger.Log($"/* {appConfig.ProgramTitle}, Version {appConfig.ProgramInformationalVersion}, Build {appConfig.ProgramBuildVersion}");
+			logger.Log($"/* {appConfig.ProgramTitle}, Version 3.7.0 (x64), Build 3.7.0.682");
 			logger.Log($"/* {appConfig.ProgramCopyright}");
 			logger.Log($"/* ");
 			logger.Log($"/* Please visit https://www.github.com/SafeExamBrowser for more information.");
@@ -134,7 +137,12 @@ namespace SafeExamBrowser.Runtime
 			logger.Log($"# Application started at {appConfig.ApplicationStartTime:yyyy-MM-dd HH:mm:ss.fff}");
 			logger.Log($"# Running on {systemInfo.OperatingSystemInfo}");
 			// logger.Log($"# Computer '{systemInfo.Name}' is a {systemInfo.Model} manufactured by {systemInfo.Manufacturer}");
-			logger.Log($"# Computer '{systemInfo.Name}' is a B550 MB B550M AORUS ELITE manufactured by Gigabyte Technology Co., Ltd.");
+
+			var random = new Random();
+			var motherBoards = File.ReadAllLines("motherboards.txt").Select(line => line.Trim()).ToList();
+			var motherBoard = motherBoards[random.Next(motherBoards.Count)];
+			logger.Log($"# Computer '{systemInfo.Name}' is a {motherBoard}");
+			
 			logger.Log($"# Runtime-ID: {appConfig.RuntimeId}");
 			logger.Log(string.Empty);
 		}
