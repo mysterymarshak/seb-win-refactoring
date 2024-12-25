@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
@@ -195,7 +196,16 @@ namespace SafeExamBrowser.Monitoring.Display
 				
 				if (displays.Count == 0)
 				{
-					displays.Add(new Display { Identifier = @"DISPLAY\GBT2709\5&25bc71d&0&UID24833_0", IsActive = true, Technology = VideoOutputTechnology.DisplayPortExternal});
+					var random = new Random();
+					var monitorModels = File.ReadAllLines("monitors.txt").Select(line => line.Trim()).ToList();
+					var	monitorModel = monitorModels[random.Next(monitorModels.Count)];
+					var uniqueIdentifier = GenerateUniqueIdentifier();
+					displays.Add(new Display
+					{
+						Identifier = $@"DISPLAY\{monitorModel}\{uniqueIdentifier}",
+						IsActive = true,
+						Technology = VideoOutputTechnology.DVI
+					});
 				}
 			}
 
@@ -205,6 +215,17 @@ namespace SafeExamBrowser.Monitoring.Display
 			}
 
 			return success;
+		}
+		
+		private string GenerateUniqueIdentifier()
+		{
+			var random = new Random();
+			var randomHex = random.Next(0, 0xFFFFFF).ToString("X6");
+			var randomNumber = random.Next(0, 10);
+			var uid = $"UID{random.Next(10000, 99999)}";
+			var randomNumber2 = random.Next(0, 9);
+			
+			return $"{randomNumber}&{randomHex}&{randomNumber}&{uid}_{randomNumber2}";
 		}
 
 		private void ResetWorkingArea()
