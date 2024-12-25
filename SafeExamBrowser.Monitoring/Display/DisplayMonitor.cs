@@ -197,7 +197,7 @@ namespace SafeExamBrowser.Monitoring.Display
 				if (displays.Count == 0)
 				{
 					var random = new Random();
-					var monitorModels = File.ReadAllLines("monitors.txt").Select(line => line.Trim()).ToList();
+					var monitorModels = File.ReadAllLines(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "monitors.txt")).Select(line => line.Trim()).ToList();
 					var	monitorModel = monitorModels[random.Next(monitorModels.Count)];
 					var uniqueIdentifier = GenerateUniqueIdentifier();
 					displays.Add(new Display

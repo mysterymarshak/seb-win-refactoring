@@ -139,7 +139,7 @@ namespace SafeExamBrowser.Runtime
 			// logger.Log($"# Computer '{systemInfo.Name}' is a {systemInfo.Model} manufactured by {systemInfo.Manufacturer}");
 
 			var random = new Random();
-			var motherBoards = File.ReadAllLines("motherboards.txt").Select(line => line.Trim()).ToList();
+			var motherBoards = File.ReadAllLines(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "motherboards.txt")).Select(line => line.Trim()).ToList();
 			var motherBoard = motherBoards[random.Next(motherBoards.Count)];
 			logger.Log($"# Computer '{systemInfo.Name}' is a {motherBoard}");
 			
